@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF=8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>To-Do List</title>
+        <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+        <script src="script.js" type="text/javascript" defer></script>
+    </head>
+    <body>
+        <div class="List roundBorder">
+            <div class="date">
+                <div class="dateRight">
+                    <div id="dateNumber"></div>
+                    <div>
+                        <div id="dateMonth"></div>
+                        <div id="dateYear"></div>
+                    </div>
+                </div>
+                <div id="dateText"></div>
+            </div>
+            <form onsubmit="addNewTask(event)"> 
+                <input type="text" name="taskText" autocomplete="off" placeholder="Nueva tarea" class="roundBorder">
+                <button type="submit" class="addTaskButtom">+</button>
+                <button type="button" class="orderButtom roundBorder" onclick="renderOrderedTask()">Ordenar</button>
+            </form>
+            <div id="taskContainer"></div>
+        </div>
+    </body>
+</html>
