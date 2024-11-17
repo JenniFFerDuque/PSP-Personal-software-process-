@@ -67,26 +67,15 @@ function initializeTasks() {
     
     // TODO : buscar EN UNA BD
     const initialTasks = [
-        "Comprar leche",
-        "Pagar facturas",
-        "Revisar correos",
         "Hacer ejercicio",
-        "Llamar al dentista",
+        "Revisar correos",
+        "Pagar facturas",
+        "Estudiar JavaScript",
         "Planificar vacaciones",
-        "Actualizar CV",
         "Leer un libro",
         "Limpiar la casa",
         "Cocinar la cena",
-        "Comprar un regalo",
-        "Organizar archivos",
-        "Ver una película",
-        "Salir a caminar",
-        "Estudiar JavaScript",
-        "Regar las plantas",
-        "Ir al supermercado",
-        "Jugar videojuegos",
-        "Escribir en el diario",
-        "Arreglar la bicicleta"
+        "Salir a caminar"
     ];
 
     const taskContainer = document.getElementById('taskContainer');
