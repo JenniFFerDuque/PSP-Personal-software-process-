@@ -73,9 +73,6 @@ function initializeTasks() {
         "Estudiar JavaScript",
         "Planificar vacaciones",
         "Leer un libro",
-        "Limpiar la casa",
-        "Cocinar la cena",
-        "Salir a caminar"
     ];
 
     const taskContainer = document.getElementById('taskContainer');
