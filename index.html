@@ -53,10 +53,16 @@
                     title="La tarea solo puede contener letras y números, y debe tener al menos 3 caracteres" 
                     required /> <!-- Campo obligatorio -->
                 <button type="submit" class="add-task-button">+</button>
-                <button type="button" class="order-button round-border" onclick="renderOrderedTask()">Ordenar</button>
+                <button type="button" class="order-button round-border" onclick="renderOrderedTask()">&#x25B2; <!-- Flecha hacia arriba --></button>
             </form>
 
             <div id="taskContainer" class="task-container"></div>
         </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 Lista de Tareas. Todos los derechos reservados.</p>
+            </div>
+        </footer>
     </body>
 </html>
