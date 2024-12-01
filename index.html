@@ -1,68 +1,106 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>To-Do List</title>
-        <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="styles.css">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" type="text/javascript" defer></script>
+</head>
 
-        <script src="script.js" type="text/javascript" defer></script>
-    </head>
+<body>
+    <header class="header">
+        <div class="banner">
+            <h1>Lista de Tareas</h1>
+            <p>Creado por:</p>
+            <ul class="creator">
+                <li><i class="fas fa-user"></i> Luis Ramos Quesada</li>
+                <li><i class="fas fa-female"></i> Jenniffer Tatiana Duque Zamora</li>
+                <li><i class="fas fa-user"></i> Jean Michaell Castañeda Avendaño</li>
+                <li><i class="fas fa-user"></i> Juan Angel Torres Florez</li>
+                <li><i class="fas fa-user"></i> Pedro Armando Vallejo Varon</li>
+            </ul>
+        </div>
+    </header>
 
-    <body>
-        <header class= "header">
-            <div class="banner">
-                <h1>Lista de Tareas</h1>
-                <p>Creado por:</p>
-                <ul class="creator">
-                    <li><i class="fas fa-user"></i>Luis Ramos Quesada</li>
-                    <li><i class="fas fa-user"></i>Jenniffer Tatiana Duque Zamora</li>
-                    <li><i class="fas fa-user"></i>Jean Michaell Castañeda Avendaño</li>
-                    <li><i class="fas fa-user"></i>Juan Angel Torres Florez</li>
-                    <li><i class="fas fa-user"></i>Pedro Armando Vallejo Varon</li>
-                </ul>
-
-
+    <div class="todo-list-container round-border">
+        <header class="date-header">
+            <div class="date-info">
+                <div id="dateNumber"></div>
+                <div class="date-details">
+                    <div id="dateMonth"></div>
+                    <div id="dateYear"></div>
+                </div>
             </div>
+            <div id="dateText" class="date-text"></div>
         </header>
 
-        <div class="todo-list-container round-border">
-            <header class="date-header">
-                <div class="date-info">
-                    <div id="dateNumber"></div>
-                    <div class="date-details">
-                        <div id="dateMonth"></div>
-                        <div id="dateYear"></div>
-                    </div>
-                </div>
-                <div id="dateText" class="date-text"></div>
-            </header>
-
-            <form onsubmit="addNewTask(event)" class="task-form">
+        <!-- Formulario para agregar una nueva tarea -->
+        <form onsubmit="addNewTask(event)" class="task-form">
+            <!-- Campo Título -->
             <input
-                    type="text"
-                    name="taskText"
-                    id="taskInput"
-                    autocomplete="off"
-                    placeholder="Nueva tarea"
-                    class="round-border task-input"
-                    minlength="3"
-                    pattern="[a-zA-Z0-9\s]+"
-                    title="La tarea solo puede contener letras y números, y debe tener al menos 3 caracteres" 
-                    required /> <!-- Campo obligatorio -->
-                <button type="submit" class="add-task-button">+</button>
-                <button type="button" class="order-button round-border" onclick="renderOrderedTask()">&#x25B2; <!-- Flecha hacia arriba --></button>
-            </form>
+                type="text"
+                name="taskTitle"
+                id="taskTitle"
+                placeholder="Título de la tarea"
+                class="round-border task-input"
+                minlength="3"
+                maxlength="50"
+                pattern="[a-zA-Z0-9\s]+"
+                title="El título solo puede contener letras, números y espacios."
+                required
+            />
 
-            <div id="taskContainer" class="task-container"></div>
-        </div>
+            <!-- Campo Descripción -->
+            <textarea
+                name="taskDescription"
+                id="taskDescription"
+                placeholder="Descripción de la tarea"
+                class="round-border task-input"
+                rows="3"
+                minlength="5"
+                maxlength="200"
+                required
+            ></textarea>
 
-        <footer class="footer">
-            <div class="footer-content">
-                <p>&copy; 2024 Lista de Tareas. Todos los derechos reservados.</p>
+            <!-- Campo Fecha de Inicio -->
+            <input
+                type="date"
+                name="startDate"
+                id="startDate"
+                class="round-border task-input"
+                required
+            />
+
+            <!-- Campo Fecha de Vencimiento -->
+            <input
+                type="date"
+                name="dueDate"
+                id="dueDate"
+                class="round-border task-input"
+                required
+            />
+
+            <!-- Mensaje de error -->
+            <div id="errorMessage" class="error-message"></div>
+
+            <!-- Botones -->
+            <div class="form-buttons">
+                <button type="button" class="order-button round-border" onclick="renderOrderedTask()"> <i class="fas fa-sort-alpha-down"></i> </button>
+                <button type="submit" class="add-task-button"><i class="fas fa-plus"></i></button>
             </div>
-        </footer>
-    </body>
+        </form>
+
+        <div id="taskContainer" class="task-container"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Lista de Tareas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
 </html>

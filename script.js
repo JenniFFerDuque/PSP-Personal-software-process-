@@ -1,3 +1,5 @@
+const tasksList = []
+
 // Función para inicializar la fecha en la interfaz
 document.addEventListener('DOMContentLoaded', () => {
     const date = new Date();
@@ -17,68 +19,166 @@ function addNewTask(event) {
         event.preventDefault();
     }
 
-    const taskText = document.querySelector('#taskInput').value.trim();
-    if (taskText === '') return;
-
-    const taskContainer = document.getElementById('taskContainer');
-    const taskElement = createTaskElement(taskText);
+    // Obtener valores de los campos del formulario
+    const taskTitle = document.querySelector('#taskTitle').value.trim();
+    const taskDescription = document.querySelector('#taskDescription').value.trim();
+    const startDate = document.querySelector('#startDate').value;
+    const dueDate = document.querySelector('#dueDate').value;
+    const errorMessage = document.getElementById('errorMessage');
     
+
+    // Limpiar mensaje de error
+    errorMessage.textContent = '';
+
+    // Validaciones
+    if (!taskTitle || !taskDescription || !startDate || !dueDate) {
+        errorMessage.textContent = 'Todos los campos son obligatorios.';
+        return;
+    }
+
+    if (new Date(startDate) > new Date(dueDate)) {
+        errorMessage.textContent = 'La fecha de inicio no puede ser posterior a la fecha de vencimiento.';
+        return;
+    }
+    const id = generateId()
+    tasksList.push({
+        id,
+        taskTitle,
+        taskDescription,
+        startDate,
+        dueDate,
+        createDate  : new Date().toISOString()
+    })
+
+    // Crear el elemento de tarea
+    const taskContainer = document.getElementById('taskContainer');
+    const taskElement = createTaskElement(id,taskTitle, taskDescription, startDate, dueDate);
+
+    // Agregar la nueva tarea al contenedor
     taskContainer.appendChild(taskElement);
-    document.querySelector('#taskInput').value = '';
+
+    // Limpiar los campos del formulario
+    document.querySelector('#taskTitle').value = '';
+    document.querySelector('#taskDescription').value = '';
+    document.querySelector('#startDate').value = '';
+    document.querySelector('#dueDate').value = '';
+
+    saveBdtask()
+}
+
+function editTask(index) {
+     // Limpiar los campos del formulario
+    document.querySelector('#taskTitle').value = '';
+    document.querySelector('#taskDescription').value = '';
+    document.querySelector('#startDate').value = '';
+    document.querySelector('#dueDate').value = '';
+
+    console.log(index,tasksList)
+    // obtento y verifico la tarea
+    const task = tasksList[index]
+    console.log(task)
+
+    if (!task) {
+        document.getElementById('errorMessage').taskContent = 'No se pudo cargar la tarea'
+        return;
+    }
+    // Actualizo el formulario
+    document.querySelector('#taskTitle').value = task.taskTitle;
+    document.querySelector('#taskDescription').value = task.taskDescription;
+    document.querySelector('#startDate').value = task.startDate;
+    document.querySelector('#dueDate').value = task.dueDate;
+    tasksList.splice(index, 1);
+}
+
+function generateId() {
+    return new Date().getTime()*1000
 }
 
 // Función para crear el elemento de tarea
-function createTaskElement(taskText) {
+function createTaskElement(id, taskTitle, taskDescription, startDate, dueDate) {
     const taskDiv = document.createElement('div');
     taskDiv.classList.add('task', 'round-border');
 
-    const taskContent = document.createElement('span');
-    taskContent.textContent = taskText;
+    const taskContent = document.createElement('div');
+    taskContent.classList.add('task-content');
+    taskContent.innerHTML = `
+        <h3>${taskTitle}</h3>
+        <p>${taskDescription}</p>
+        <p><strong>Inicio:</strong> ${startDate}</p>
+        <p><strong>Vencimiento:</strong> ${dueDate}</p>
+    `;
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('task-buttons');
 
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'X';
+    deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
     deleteButton.classList.add('delete-button');
-    deleteButton.addEventListener('click', () => taskDiv.remove());
+    deleteButton.addEventListener('click', () => {
+        let index = tasksList.map(x => {
+            return x.id;
+        }).indexOf(id);
+        taskDiv.remove();
+        tasksList.splice(index, 1);
+        console.log(tasksList)
+        saveBdtask()
+    });
+
+    const editButton = document.createElement('button');
+    editButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+    editButton.classList.add('edit-button');
+    editButton.addEventListener('click', () => {
+        let index = tasksList.map(x => {
+            return x.id;
+        }).indexOf(id);
+        editTask(index);
+        taskDiv.remove();
+        saveBdtask()
+    });
+
+    buttonContainer.appendChild(editButton);
+    buttonContainer.appendChild(deleteButton);
 
     taskDiv.appendChild(taskContent);
-    taskDiv.appendChild(deleteButton);
+    taskDiv.appendChild(buttonContainer);
 
     return taskDiv;
 }
 
-// Función para ordenar las tareas alfabéticamente
+function saveBdtask() {
+    localStorage.setItem('tasks',JSON.stringify(tasksList))
+}
+
+// Función para ordenar las tareas alfabéticamente por título
 function renderOrderedTask() {
-    const tasks = [...document.querySelectorAll('.task span')];
+    const tasks = [...document.querySelectorAll('.task .task-content h3')];
     const taskContainer = document.getElementById('taskContainer');
-    
+
     const orderedTasks = tasks
-        .map(task => task.textContent)
-        .sort((a, b) => a.localeCompare(b));
+        .map(task => ({
+            title: task.textContent,
+            element: task.closest('.task')
+        }))
+        .sort((a, b) => a.title.localeCompare(b.title));
 
     taskContainer.innerHTML = '';
-    orderedTasks.forEach(taskText => {
-        const taskElement = createTaskElement(taskText);
-        taskContainer.appendChild(taskElement);
+    orderedTasks.forEach(task => {
+        taskContainer.appendChild(task.element);
     });
 }
 
-// Función para inicializar una lista de tareas predeterminadas
+
 function initializeTasks() {
-    
-    // TODO : buscar EN UNA BD
-    const initialTasks = [
-        "Hacer ejercicio",
-        "Revisar correos",
-        "Pagar facturas",
-        "Estudiar JavaScript",
-        "Planificar vacaciones",
-        "Leer un libro",
-    ];
+    let initialTasks = []
+    let bdtask = localStorage.getItem('tasks')
+    if (bdtask && bdtask.length> 0) {
+        initialTasks = JSON.parse(bdtask)
+    }
 
-    const taskContainer = document.getElementById('taskContainer');
-
-    initialTasks.forEach(taskText => {
-        const taskElement = createTaskElement(taskText);
+    const taskContainer = document.getElementById('taskContainer')
+    initialTasks.forEach((task, index) => {
+        const { id,taskTitle, taskDescription, startDate, dueDate } = task
+        const taskElement = createTaskElement(id,taskTitle,taskDescription,startDate,dueDate);
         taskContainer.appendChild(taskElement);
-    });
+    })
 }
